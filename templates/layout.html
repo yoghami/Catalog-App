@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>{% block title %}{% endblock %}</title>
+    <!-- Setting up the view -->
+     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Including Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- Including extra css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+
+    <!-- Including font awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+      integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+    <script>
+        $('.alert').alert()
+    </script>
+    {% block head %}{% endblock %}
+</head>
+<body>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            {% if 'username' in session %}
+                {% if message == 'We are unable to process your request right now. Please try again later.' %}
+                    <div class="alert alert-danger alert-dismissible fade show mb-0 text-center" role="alert">
+                {% elif message == 'The entered category already exists.' %}
+                    <div class="alert alert-warning alert-dismissible fade show mb-0 text-center" role="alert">
+                {% elif message == 'We are unable to process your request right now.' %}
+                    <div class="alert alert-warning alert-dismissible fade show mb-0 text-center" role="alert">
+                {% elif message == 'Please log in to continue.' %}
+                    <div class="alert alert-danger alert-dismissible fade show mb-0 text-center" role="alert">
+                {% elif message == 'You were not authorised to access that page.' %}
+                    <div class="alert alert-danger alert-dismissible fade show mb-0 text-center" role="alert">
+                {% elif message == 'The item already exists in the database!' %}
+                    <div class="alert alert-warning alert-dismissible fade show mb-0 text-center" role="alert">
+                {% else %}
+                    <div class="alert alert-success alert-dismissible fade show mb-0 text-center" role="alert">
+                {% endif %}
+            {% elif (message == 'You have been successfully logged out!') %}
+                <div class="alert alert-success alert-dismissible fade show mb-0 text-center" role="alert">
+            {% else %}
+                <div class="alert alert-danger alert-dismissible fade show mb-0 text-center" role="alert">
+            {% endif %}
+            
+            {{ message }}
+        
+        {% endfor %}  
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+    {% endif %}
+    {% endwith %}
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="{{ url_for('home') }}">
+            <i class="fas fa-archive mr-4"></i>
+            Item Catalog
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
+                aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                  <a class="nav-link" href="{{ url_for('home') }}">Home <span class="sr-only">(current)</span></a>
+                </li>
+
+                {% if 'username' in session %}
+                <li class="nav-item dropdown ml-auto">
+                    <a class="nav-link dropdown-toggle navbar-brand" href="#" id="navbarDropdown"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img src="{{ session['picture'] }}"
+                        class="rounded-circle" alt="Profile Picture" style="height: 35px; width: 35px;">
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                        <p class="dropdown-item">Logged as <strong>{{ session['username'] }}</strong></p>
+                        <hr>
+                        <a class="dropdown-item" href="{{ url_for('logout') }}">
+                            <i class="fas fa-sign-out-alt text-and-icon"></i>
+                            Log out
+                        </a>
+                    </div>
+                  </li>
+                  </ul>
+                 {% else %}
+                <a href="{{ url_for('login') }}">
+                    <button class="btn btn-primary" type="submit">
+                        Login or Sign up
+                    </button>
+                </a>
+                {% endif %}
+          </div>        
+      </nav>
+
+{% block content %}
+{% endblock %}
+
+</body>
+</html>

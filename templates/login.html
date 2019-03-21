@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+{% block title %}Login{% endblock %}
+{% block head %}
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+  </script>
+
+  <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer>
+  </script>
+  <script>
+    function start() {
+      gapi.load('auth2', function() {
+        auth2 = gapi.auth2.init({
+          client_id: "590499895978-uihkb8g1ld37f207pqe8rp50m2jgdgi0.apps.googleusercontent.com",
+          // Scopes to request in addition to 'profile' and 'email'
+          //scope: 'name'
+        });
+      });
+    }
+  </script>
+
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 text-center">
+      <button style="margin-top: 35%" id="signinButton">Sign in with Google</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function signInCallback(authResult) {
+  if (authResult['code']) {
+
+    // Hide the sign-in button now that the user is authorized, for example:
+    $('#signinButton').attr('style', 'display: none');
+
+    // Send the code to the server
+    $.ajax({
+      type: 'POST',
+      url: '/gconnect?state={{STATE}}',
+      // Always include an `X-Requested-With` header in every AJAX request,
+      // to protect against CSRF attacks.
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      contentType: 'application/octet-stream; charset=utf-8',
+      success: function(result) {
+        // Handle or verify the server response.
+        setTimeout(function() {
+          window.location.href = "/";
+        }, 1000);
+      },
+      processData: false,
+      data: authResult['code']
+    });
+  } else {
+    // There was an error.
+    console.log('There was an error')
+  }
+}
+</script>
+
+<script>
+  $('#signinButton').click(function() {
+    // signInCallback defined in step 6.
+    auth2.grantOfflineAccess().then(signInCallback);
+  });
+</script>
+
+{% endblock %}

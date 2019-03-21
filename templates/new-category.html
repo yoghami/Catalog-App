@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block title %}Creating Category{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="row mt-5">
+      <div class="col-md-8">
+        <h1>Create New Category</h1>
+        <form name="new-category" method="POST">
+          <div class="form-group">
+            <input name="new-category-name" type="text" class="form-control" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+          <a href="{{ url_for('home') }}">
+            <button type="button" class="btn btn-danger">Cancel</button>
+          </a>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

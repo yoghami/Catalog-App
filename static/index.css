@@ -1,0 +1,16 @@
+body {
+    background: #ADADAD;
+}
+
+
+.login-box {
+    margin-top: 200px;
+    height: 250px;
+    box-shadow: None;
+    transition: box-shadow 400ms;
+}
+
+.container .google-box {
+    display: inline-block;
+    text-align: center;
+}
